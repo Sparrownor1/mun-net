@@ -1,0 +1,11 @@
+{% extends 'header.html' %}
+
+{% block content %}
+
+  <form method="POST">
+      {% csrf_token %}
+      {{form.as_p}}
+      <button type="submit" class="btn cyan darken-1">Register a Delegation Account</button>
+  </form>
+
+{% endblock %}

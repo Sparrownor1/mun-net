@@ -1,0 +1,49 @@
+<nav>
+  <div class="nav-wrapper blue-grey darken-3">
+
+    <a href="/" class="brand-logo">Mun-Net!</a>
+
+    <ul id="nav-mobile" class="right hide-on-med-and-down">
+
+
+      {% if user.is_authenticated %}
+
+        {% if user.is_superuser %}
+          <li><a href="/admin">Admin</a></li>
+        {% endif %}
+
+        {% if user.is_delegation %}
+          <li><a href="/delegation/">Delegates</a></li>
+          <li><a href="/delegation/edit_delegation">Delegation Info</a></li>
+        {% endif %}
+
+        {% if user.is_chair %}
+          <ul id="dropdown-chair" class="dropdown-content">
+            <li><a href="/chair/">Home</a></li>
+            <li><a href="/chair/requests/">Logistics Requests</a></li>
+          </ul>
+
+          <li><a class="dropdown-trigger" data-target="dropdown-chair" href="#!">Chair<i class="material-icons right">arrow_drop_down</i></a></li>
+        {% endif %}
+
+        {% if user.is_secretariat %}
+          <ul id="dropdown-secretariat" class="dropdown-content">
+            <li><a href="/secretariat/">Home</a></li>
+            <li><a href="/secretariat/progress/">Committee Progress</a></li>
+            <li><a href="/secretariat/requests/">Logistics Requests</a></li>
+            <li><a href="/secretariat/add_chair/">Add Chair Account</a></li>
+          </ul>
+
+          <li><a class="dropdown-trigger" data-target="dropdown-secretariat" href="#!">Secretariat<i class="material-icons right">arrow_drop_down</i></a></li>
+        {% endif %}
+
+        <li><a href="/users/account">Account: {{user.username|title}}</a></li>
+        <li><a href="/users/logout">Logout</a></li>
+
+      {% else %}
+        <li><a href="/users/register">Register</a></li>
+        <li><a href="/users/login">Login</a></li>
+      {% endif %}
+    </ul>
+  </div>
+</nav>
