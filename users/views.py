@@ -79,8 +79,10 @@ def index(request):
 	if request.user.is_authenticated:
 		if request.user.is_secretariat:
 			return redirect("secretariat:index")
+		if request.user.is_chair:
+			return redirect('chair:index')
 		if request.user.is_delegation:
 			return redirect("delegation:index")
-			
+
 	return render(request,
 				  "header.html",)

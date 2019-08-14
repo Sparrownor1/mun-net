@@ -1,5 +1,6 @@
 <head>
   {% load static %}
+  {% load tz %}
 
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css">
 
@@ -7,10 +8,11 @@
   <link href="{% static 'tinymce/css/prism.css' %}" rel="stylesheet">
 
   <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
-  
+
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 </head>
 
+{% timezone "Europe/Oslo" %}
 <body>
 
   {% include "includes/navbar.html" %}
@@ -27,3 +29,4 @@
 <!-- Prism JS -->
 <script src="{% static 'tinymce/js/prism.js' %}"></script>
 <script>M.AutoInit();</script>
+{% endtimezone %}

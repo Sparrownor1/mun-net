@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from users.models import User
 from delegation.models import Committee
-from .models import Chair
+from .models import Chair, LogisticsRequest
 
 class ChairCreationForm(UserCreationForm):
 
@@ -22,3 +22,9 @@ class ChairCreationForm(UserCreationForm):
             user.save()
             chair = Chair.objects.create(user=user, committee=self.cleaned_data['committee'])
         return user
+
+class LogisticsRequestForm(forms.ModelForm):
+
+    class Meta:
+        model = LogisticsRequest
+        fields = ['description',]

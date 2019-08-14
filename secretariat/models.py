@@ -11,7 +11,7 @@ class Chair(models.Model):
 
     def __str__(self):
         return f"Chair: {self.user} - {self.committee}"
-        
+
 class ProgressSheet(models.Model):
 
     committee = models.OneToOneField(Committee, on_delete=models.CASCADE)
@@ -23,11 +23,10 @@ class ProgressSheet(models.Model):
 
 class LogisticsRequest(models.Model):
 
-    committee = models.OneToOneField(Committee, on_delete=models.CASCADE)
+    committee = models.ForeignKey(Committee, on_delete=models.CASCADE)
 
     description = models.CharField(max_length=200)
     timestamp = models.DateTimeField('timestamp')
-
     completed = models.BooleanField(default=False)
 
     def __str__(self):
