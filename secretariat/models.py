@@ -16,7 +16,7 @@ class ProgressSheet(models.Model):
 
     committee = models.OneToOneField(Committee, on_delete=models.CASCADE)
 
-    data = models.TextField()
+    data = models.TextField(blank=True, null=True)
 
     def __str__(self):
         return f"Progress Sheet: {self.committee}"

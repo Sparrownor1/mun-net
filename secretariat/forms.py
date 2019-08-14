@@ -1,8 +1,10 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+from tinymce.widgets import TinyMCE
+
 from users.models import User
 from delegation.models import Committee
-from .models import Chair, LogisticsRequest
+from .models import Chair, LogisticsRequest, ProgressSheet
 
 class ChairCreationForm(UserCreationForm):
 
@@ -22,6 +24,14 @@ class ChairCreationForm(UserCreationForm):
             user.save()
             chair = Chair.objects.create(user=user, committee=self.cleaned_data['committee'])
         return user
+
+class ProgressSheetForm(forms.ModelForm):
+
+    class Meta:
+        model = ProgressSheet
+        fields = ['data', ]
+        widgets = {'data': TinyMCE()}
+
 
 class LogisticsRequestForm(forms.ModelForm):
 

@@ -3,8 +3,8 @@ from django.contrib import messages
 from django.utils import timezone
 from datetime import datetime
 from delegation.models import Committee
-from secretariat.models import LogisticsRequest, Chair
-from secretariat.forms import LogisticsRequestForm
+from secretariat.models import LogisticsRequest, Chair, ProgressSheet
+from secretariat.forms import LogisticsRequestForm, ProgressSheetForm
 
 # Create your views here.
 def index(request):
@@ -13,10 +13,38 @@ def index(request):
 
 			pages = {
 				"Logistics Requests": "requests/",
+				"Committee Progress Sheet": "sheet/",
 			}
 			return render(request,
 						  "chair/index.html",
 						  {"pages": pages})
+
+	messages.error(request, "You are not authorized to access that page")
+	return redirect('users:index')
+
+def sheet(request):
+	if request.user.is_authenticated:
+		if request.user.is_chair:
+
+			profile = Chair.objects.get(user=request.user)
+			own_committee = profile.committee
+			sheet = ProgressSheet.objects.get(committee=own_committee)
+
+			if request.method == "POST":
+				sheet = ProgressSheet.objects.get(committee=own_committee)
+				form = ProgressSheetForm(request.POST, instance=sheet)
+				if form.is_valid():
+					updated_sheet = form.save()
+					messages.info(request, "Sheet updated")
+					return redirect('chair:sheet')
+
+			else:
+				sheet = ProgressSheet.objects.get(committee=own_committee)
+				form = ProgressSheetForm(instance=sheet)
+				return render(request,
+							  "chair/sheet.html",
+							  {"form": form,
+							   "own_committee": own_committee})
 
 	messages.error(request, "You are not authorized to access that page")
 	return redirect('users:index')

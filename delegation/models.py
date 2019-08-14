@@ -27,7 +27,7 @@ class Delegate(models.Model):
 
     delegate_first_name = models.CharField(max_length=200)
     delegate_last_name = models.CharField(max_length=200)
-    delegate_email = models.EmailField()
+    delegate_email = models.EmailField(unique=True)
     delegate_dob = models.DateField(null=True)
     delegate_past_conferences = models.IntegerField(null=True)
 

@@ -7,6 +7,7 @@ from django.db import models
 class SheetAdmin(admin.ModelAdmin):
 
     fieldsets = (
+        (None, {'fields': ('committee',)}),
         ("Content", {'fields': ('data',)}),
     )
 
