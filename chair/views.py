@@ -70,7 +70,7 @@ def add_request(request):
 		if request.user.is_chair:
 
 			if request.method == "POST":
-				new_request = LogisticsRequest(committee=Chair.objects.get(user=request.user).committee, timestamp=datetime.now())
+				new_request = LogisticsRequest(committee=Chair.objects.get(user=request.user).committee)
 				form = LogisticsRequestForm(request.POST, instance=new_request)
 
 				if form.is_valid():

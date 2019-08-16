@@ -26,7 +26,7 @@ class LogisticsRequest(models.Model):
     committee = models.ForeignKey(Committee, on_delete=models.CASCADE)
 
     description = models.CharField(max_length=200)
-    timestamp = models.DateTimeField('timestamp')
+    timestamp = models.DateTimeField('timestamp', auto_now_add=True)
     completed = models.BooleanField(default=False)
 
     def __str__(self):
