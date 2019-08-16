@@ -1,4 +1,5 @@
 from django import forms
+from django.db import models
 from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from tinymce.widgets import TinyMCE
 
@@ -27,11 +28,12 @@ class ChairCreationForm(UserCreationForm):
 
 class ProgressSheetForm(forms.ModelForm):
 
+    data = forms.CharField(widget=TinyMCE(attrs={'cols': 50, 'rows': 30}))
+
     class Meta:
         model = ProgressSheet
         fields = ['data', ]
-        widgets = {'data': TinyMCE()}
-
+        widgets = {'data': TinyMCE(attrs={'cols': 80, 'rows': 30}),}
 
 class LogisticsRequestForm(forms.ModelForm):
 
