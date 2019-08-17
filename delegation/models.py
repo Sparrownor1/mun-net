@@ -50,3 +50,12 @@ class CountryCommitteeAllocation(models.Model):
 
     def __str__(self):
         return f"{self.allocated_committee}-{self.allocated_country}"
+
+class PositionPaper(models.Model):
+
+    delegate = models.OneToOneField(Delegate, on_delete=models.CASCADE)
+    document = models.FileField(upload_to='documents/')
+    uploaded_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Position Paper: {self.delegate} - {self.uploaded_at}"

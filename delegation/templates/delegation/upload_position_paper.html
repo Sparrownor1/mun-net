@@ -1,0 +1,13 @@
+{% extends 'header.html' %}
+
+{% block content %}
+  <div class="row">
+    <h4 class="center-align">Position Paper for {{ delegate.delegate_first_name }} {{ delegate.delegate_last_name }}</h4>
+  </div>
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button class="btn" type="submit">Upload</button>
+  </form>
+
+{% endblock %}

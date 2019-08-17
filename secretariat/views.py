@@ -10,9 +10,9 @@ def index(request):
 		if request.user.is_secretariat:
 
 			pages = {
+				"Add Chair": "add_chair/",
 				"Progress Sheets": "progress/",
 				"Logistics Requests": "requests/",
-				"Add Chair": "add_chair/",
 			}
 			return render(request,
 						  "secretariat/index.html",

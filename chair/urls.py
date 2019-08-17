@@ -6,6 +6,7 @@ app_name = 'chair'
 urlpatterns = [
     path('', views.index, name='index'),
     path('sheet/', views.sheet, name='sheet'),
+    path('position_papers/', views.position_papers, name='position_papers'),
     path('requests/', views.requests, name='requests'),
     path('requests/add/', views.add_request, name='add_request'),
     path('requests/delete/<request_key>', views.delete_request, name='delete_request'),

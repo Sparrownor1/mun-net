@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, HttpResponse
 from django.contrib import messages
 from django.utils import timezone
 from datetime import datetime
-from delegation.models import Committee
+from delegation.models import Committee, PositionPaper, CountryCommitteeAllocation
 from secretariat.models import LogisticsRequest, Chair, ProgressSheet
 from secretariat.forms import LogisticsRequestForm, ProgressSheetForm
 
@@ -14,6 +14,7 @@ def index(request):
 			pages = {
 				"Logistics Requests": "requests/",
 				"Committee Progress Sheet": "sheet/",
+				"Position Papers": "position_papers/",
 			}
 			return render(request,
 						  "chair/index.html",
@@ -118,6 +119,20 @@ def delete_request(request, request_key):
 			logisticsrequest.delete()
 			messages.info(request, "You have deleted the request")
 			return redirect('chair:requests')
+
+	messages.error(request, "You are not authorized to access that page")
+	return redirect('users:index')
+
+def position_papers(request):
+	if request.user.is_authenticated:
+		if request.user.is_chair:
+
+			profile = Chair.objects.get(user=request.user)
+			own_committee = profile.committee
+
+			# get paper where paper_delegate__allocation_committee = own_committee
+			papers = PositionPaper.objects.filter(delegate__countrycommitteeallocation__allocated_committee = own_committee)
+			return HttpResponse(papers)
 
 	messages.error(request, "You are not authorized to access that page")
 	return redirect('users:index')

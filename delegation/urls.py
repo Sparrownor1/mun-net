@@ -9,4 +9,5 @@ urlpatterns = [
     path("delete_delegate/<delegate_key>", views.delete_delegate, name="delete_delegate"),
     path("edit_delegate/<delegate_key>", views.edit_delegate, name="edit_delegate"),
     path("edit_delegation/", views.edit_delegation, name="edit_delegation"),
+    path("upload_position_paper/<delegate_key>", views.upload_position_paper, name='upload_position_paper')
 ]

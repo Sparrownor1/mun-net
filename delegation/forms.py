@@ -1,11 +1,9 @@
 from django import forms
-from .models import Country, Committee, Delegate
+from .models import Country, Committee, Delegate, PositionPaper
 from users.models import Delegation
 
 class DelegateForm(forms.ModelForm):
-
     class Meta:
-
         model = Delegate
 
         fields = ['delegate_first_name',
@@ -29,11 +27,13 @@ class DelegateForm(forms.ModelForm):
         widgets = {"delegate_dob": forms.DateInput(attrs={'type': 'date'})}
 
 class DelegationForm(forms.ModelForm):
-
     class Meta:
-
         model = Delegation
-
         fields = ['delegation_name',
                   'delegation_size',
                   'delegation_contact_number']
+
+class PositionPaperForm(forms.ModelForm):
+    class Meta:
+        model = PositionPaper
+        fields = ['document',]
