@@ -3,7 +3,7 @@ from django.contrib import messages
 from .forms import ChairCreationForm
 from .models import ProgressSheet, LogisticsRequest
 from delegation.models import Delegate, Allocation, Committee, Country
-from .filters import RequestFilter
+from .filters import RequestFilter, DelegateFilter, AllocationFilter
 
 # Create your views here.
 def index(request):
@@ -27,7 +27,18 @@ def allocations(request):
 	if request.user.is_authenticated:
 		if request.user.is_secretariat:
 
-			pass
+			delegates = Delegate.objects.all().order_by('-past_conferences')
+			delegate_filter = DelegateFilter(request.GET, queryset=delegates)
+			allocations = Allocation.objects.all()
+			allocation_filter = AllocationFilter(request.GET, queryset=allocations)
+
+			return render(request,
+						  "secretariat/allocations.html",
+						  {
+						  'delegate_filter': delegate_filter,
+						  'allocation_filter': allocation_filter,
+						  }
+			)
 
 	messages.error(request, "You are not authorized to access that page")
 	return redirect('users:index')
