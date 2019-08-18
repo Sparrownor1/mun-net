@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, HttpResponse
 from django.contrib import messages
 from django.utils import timezone
 from datetime import datetime
-from delegation.models import Committee, PositionPaper, CountryCommitteeAllocation
+from delegation.models import Committee, PositionPaper, Allocation
 from secretariat.models import LogisticsRequest, Chair, ProgressSheet
 from secretariat.forms import LogisticsRequestForm, ProgressSheetForm
 
@@ -131,7 +131,7 @@ def position_papers(request):
 			own_committee = profile.committee
 
 			# get paper where paper_delegate__allocation_committee = own_committee
-			papers = PositionPaper.objects.filter(delegate__countrycommitteeallocation__allocated_committee = own_committee)
+			papers = PositionPaper.objects.filter(delegate__allocation__committee = own_committee)
 			return HttpResponse(papers)
 
 	messages.error(request, "You are not authorized to access that page")

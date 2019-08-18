@@ -6,32 +6,32 @@ class DelegateForm(forms.ModelForm):
     class Meta:
         model = Delegate
 
-        fields = ['delegate_first_name',
-                  'delegate_last_name',
-                  'delegate_email',
-                  'delegate_dob',
-                  'delegate_past_conferences',
-                  'delegate_committee_preference',
-                  'delegate_country_preference',
+        fields = ['first_name',
+                  'last_name',
+                  'email',
+                  'dob',
+                  'past_conferences',
+                  'committee_preference',
+                  'country_preference',
                   ]
 
-        labels = {'delegate_first_name': 'First Name',
-                  'delegate_last_name': 'Last Name',
-                  'delegate_email': 'Email',
-                  'delegate_dob': 'Date of Birth',
-                  'delegate_past_conferences': 'No. of Past Conferences',
-                  'delegate_country_preference': 'Country Preference',
-                  'delegate_committee_preference': 'Committee Preference',
+        labels = {'first_name': 'First Name',
+                  'last_name': 'Last Name',
+                  'email': 'Email',
+                  'dob': 'Date of Birth',
+                  'past_conferences': 'No. of Past Conferences',
+                  'country_preference': 'Country Preference',
+                  'committee_preference': 'Committee Preference',
                   }
 
-        widgets = {"delegate_dob": forms.DateInput(attrs={'type': 'date'})}
+        widgets = {"dob": forms.DateInput(attrs={'type': 'date'})}
 
 class DelegationForm(forms.ModelForm):
     class Meta:
         model = Delegation
-        fields = ['delegation_name',
-                  'delegation_size',
-                  'delegation_contact_number']
+        fields = ['name',
+                  'size',
+                  'contact_number']
 
 class PositionPaperForm(forms.ModelForm):
     class Meta:

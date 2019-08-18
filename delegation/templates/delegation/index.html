@@ -21,24 +21,24 @@
       <tbody>
         {% for d in delegates %}
           <tr>
-            <td>{{d.delegate_first_name}} {{d.delegate_last_name}}</td>
-            <td>{{d.delegate_email}}</td>
-            <td>{{d.delegate_dob}}</td>
-            <td>{{d.delegate_past_conferences}}</td>
-            <td>{{d.delegate_committee_preference}}</td>
-            <td>{{d.delegate_country_preference}}</td>
+            <td>{{d.first_name}} {{d.last_name}}</td>
+            <td>{{d.email}}</td>
+            <td>{{d.dob}}</td>
+            <td>{{d.past_conferences}}</td>
+            <td>{{d.committee_preference}}</td>
+            <td>{{d.country_preference}}</td>
 
             <td>
               {% for a in allocations %}
-                {% if a.allocated_delegate == d %}
-                  {{a.allocated_committee}}
+                {% if a.delegate == d %}
+                  {{a.committee}}
                 {% endif %}
               {% endfor %}
             </td>
             <td>
               {% for a in allocations %}
-                {% if a.allocated_delegate == d %}
-                  {{a.allocated_country}}
+                {% if a.delegate == d %}
+                  {{a.country}}
                 {% endif %}
               {% endfor %}
             </td>
@@ -66,7 +66,7 @@
     {% for d in delegates %}
     <div id="modal{{d.pk}}"class="modal">
       <div class="modal-content">
-        <p>Are you sure you want to delete the delegate {{d.delegate_first_name}} {{d.delegate_last_name}}?</p>
+        <p>Are you sure you want to delete the delegate {{d.first_name}} {{d.last_name}}?</p>
       </div>
       <div class="modal-footer">
         <a href="#" class="modal-close waves-effect waves-green btn-flat">No</a>

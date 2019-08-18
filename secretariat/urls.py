@@ -10,4 +10,5 @@ urlpatterns = [
         path('progress/<slug>/', views.progress_sheet, name='progress_sheet'),
         path('requests/', views.requests, name='requests'),
         path('requests/change_status/<request_key>/', views.change_status, name='change_status'),
+        path('allocations/', views.allocations, name='allocations')
 ]

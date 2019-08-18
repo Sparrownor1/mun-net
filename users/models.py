@@ -14,12 +14,12 @@ class Delegation(models.Model):
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
 
-    delegation_name = models.CharField(max_length=200, blank=True, null=True)
-    delegation_size = models.IntegerField(blank=True, null=True)
-    delegation_contact_number = models.CharField(max_length=200, blank=True, null=True)
+    name = models.CharField(max_length=200, blank=True, null=True)
+    size = models.IntegerField(default=0)
+    contact_number = models.CharField(max_length=200, blank=True, null=True)
 
     def __str__(self):
-        if self.delegation_name is not None:
-            return self.delegation_name
+        if self.name is not None:
+            return self.name
         else:
             return f'Delegation Object: {self.user}'

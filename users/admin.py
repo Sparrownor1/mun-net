@@ -29,6 +29,10 @@ class UserAdmin(UserAdmin):
         }),
     )
 
+class DelegationAdmin(admin.ModelAdmin):
+
+    list_display = ['__str__', 'size', 'contact_number']
+
 # Register your models here.
 admin.site.register(User, UserAdmin)
-admin.site.register(Delegation)
+admin.site.register(Delegation, DelegationAdmin)

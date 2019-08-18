@@ -2,7 +2,7 @@
 
 {% block content %}
   <div class="row">
-    <h4 class="center-align">Position Paper for {{ delegate.delegate_first_name }} {{ delegate.delegate_last_name }}</h4>
+    <h4 class="center-align">Position Paper for {{ delegate.first_name }} {{ delegate.last_name }}</h4>
   </div>
   <form method="post" enctype="multipart/form-data">
     {% csrf_token %}

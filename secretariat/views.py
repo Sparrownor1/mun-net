@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib import messages
 from .forms import ChairCreationForm
 from .models import ProgressSheet, LogisticsRequest
+from delegation.models import Delegate, Allocation, Committee, Country
 from .filters import RequestFilter
 
 # Create your views here.
@@ -11,12 +12,22 @@ def index(request):
 
 			pages = {
 				"Add Chair": "add_chair/",
+				"Allocations": "allocations/",
 				"Progress Sheets": "progress/",
 				"Logistics Requests": "requests/",
 			}
 			return render(request,
 						  "secretariat/index.html",
 						  {"pages": pages})
+
+	messages.error(request, "You are not authorized to access that page")
+	return redirect('users:index')
+
+def allocations(request):
+	if request.user.is_authenticated:
+		if request.user.is_secretariat:
+
+			pass
 
 	messages.error(request, "You are not authorized to access that page")
 	return redirect('users:index')

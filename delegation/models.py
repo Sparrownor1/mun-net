@@ -5,7 +5,7 @@ from users.models import Delegation
 class Country(models.Model):
 
     name = models.CharField(max_length=200, unique=True)
-    country_committee = models.ManyToManyField('Committee', through='CountryCommitteeAllocation')
+    country_committee = models.ManyToManyField('Committee', through='Allocation')
 
     class Meta:
         verbose_name_plural = "Countries"
@@ -23,33 +23,33 @@ class Committee(models.Model):
 
 class Delegate(models.Model):
 
-    delegate_delegation = models.ForeignKey(Delegation, on_delete=models.CASCADE)
+    delegation = models.ForeignKey(Delegation, on_delete=models.CASCADE)
 
-    delegate_first_name = models.CharField(max_length=200)
-    delegate_last_name = models.CharField(max_length=200)
-    delegate_email = models.EmailField(unique=True)
-    delegate_dob = models.DateField(null=True)
-    delegate_past_conferences = models.IntegerField(null=True)
+    first_name = models.CharField(max_length=200)
+    last_name = models.CharField(max_length=200)
+    email = models.EmailField(unique=True)
+    dob = models.DateField(null=True)
+    past_conferences = models.IntegerField(null=True)
 
-    delegate_committee_preference = models.ForeignKey(Committee, on_delete=models.SET_NULL, null=True)
-    delegate_country_preference = models.ForeignKey(Country, on_delete=models.SET_NULL, null=True)
+    committee_preference = models.ForeignKey(Committee, on_delete=models.SET_NULL, null=True)
+    country_preference = models.ForeignKey(Country, on_delete=models.SET_NULL, null=True)
 
 
     def __str__(self):
-        return f"{self.delegate_first_name} {self.delegate_last_name} - {self.delegate_delegation}"
+        return f"{self.first_name} {self.last_name}"
 
 
-class CountryCommitteeAllocation(models.Model):
+class Allocation(models.Model):
 
-    allocated_delegate = models.OneToOneField(Delegate, on_delete=models.SET_NULL, null=True, blank=True)
-    allocated_country = models.ForeignKey(Country, on_delete=models.CASCADE, default=1)
-    allocated_committee = models.ForeignKey(Committee, on_delete=models.CASCADE, default=1)
+    delegate = models.OneToOneField(Delegate, on_delete=models.SET_NULL, null=True, blank=True)
+    country = models.ForeignKey(Country, on_delete=models.CASCADE, default=1)
+    committee = models.ForeignKey(Committee, on_delete=models.CASCADE, default=1)
 
     class Meta:
-        unique_together = [['allocated_country', 'allocated_committee']]
+        unique_together = [['country', 'committee']]
 
     def __str__(self):
-        return f"{self.allocated_committee}-{self.allocated_country}"
+        return f"{self.committee}-{self.country}"
 
 class PositionPaper(models.Model):
 

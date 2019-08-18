@@ -3,7 +3,7 @@ from django.db import IntegrityError
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 
-from .models import Delegate, CountryCommitteeAllocation, PositionPaper
+from .models import Delegate, Allocation, PositionPaper
 from users.models import Delegation
 from .forms import DelegateForm, DelegationForm, PositionPaperForm
 
@@ -14,8 +14,12 @@ def index(request):
 		if current_user.is_delegation:
 
 			user_del = Delegation.objects.get(user=current_user)
-			delegates_in_delegation = Delegate.objects.filter(delegate_delegation=user_del)
-			allocations = CountryCommitteeAllocation.objects.filter(allocated_delegate__delegate_delegation=user_del)
+			delegates_in_delegation = Delegate.objects.filter(delegation=user_del)
+			allocations = Allocation.objects.filter(delegate__delegation=user_del)
+
+			if len(delegates_in_delegation) > user_del.size:
+				messages.error(request, "You have more delegates than your delegation size states, please change it")
+				return redirect('delegation:edit_delegation')
 
 			return render(request,
 						  "delegation/index.html",
@@ -30,21 +34,29 @@ def add_delegate(request):
 	if request.user.is_authenticated:
 		if request.user.is_delegation:
 
-			if request.method == "POST":
-				newDel = Delegate(delegate_delegation = Delegation.objects.get(user=request.user),)
-				form = DelegateForm(request.POST, instance=newDel)
+			user_del = Delegation.objects.get(user=request.user)
+			delegates_in_delegation = Delegate.objects.filter(delegation=user_del)
 
-				if form.is_valid():
-					form.save()
-					messages.success(request, "You have added a new delegate")
-				return redirect("delegation:index")
+			if len(delegates_in_delegation) < user_del.size:
 
+				if request.method == "POST":
+					newDel = Delegate(delegation = Delegation.objects.get(user=request.user),)
+					form = DelegateForm(request.POST, instance=newDel)
+
+					if form.is_valid():
+						form.save()
+						messages.success(request, "You have added a new delegate")
+					return redirect("delegation:index")
+
+				else:
+					form = DelegateForm()
+					return render(request,
+								  "delegation/add_delegate.html",
+								  {"form": form}
+					)
 			else:
-				form = DelegateForm()
-				return render(request,
-							  "delegation/add_delegate.html",
-							  {"form": form}
-				)
+				messages.error(request, "Please change your delegation size before you add another delegate")
+				return redirect('delegation:edit_delegation')
 
 	messages.error(request, "You are not authorized to access that page")
 	return redirect('users:index')
@@ -90,48 +102,55 @@ def upload_position_paper(request, delegate_key):
 			delegate = Delegate.objects.get(pk=delegate_key)
 
 			try:
-				current_paper = PositionPaper.objects.get(delegate=delegate)
-			except ObjectDoesNotExist:
-				current_paper = None
+				Allocation.objects.get(delegate=delegate)
 
-			if request.method == 'POST':
-				if current_paper:
-					form = PositionPaperForm(request.POST, request.FILES, instance=current_paper)
-					if form.is_valid():
-						try:
-							form.save()
-						except IntegrityError as e:
-							messages.error(request, "This delegate already has uploaded a position paper")
-							return redirect('delegation:index')
-						messages.info(request, f"Position Paper uploaded for delegate {delegate.delegate_first_name} {delegate.delegate_last_name}")
-						return redirect('delegation:index')
-
-				else:
-					paper = PositionPaper(delegate=delegate)
-					form = PositionPaperForm(request.POST, request.FILES, instance=paper)
-					if form.is_valid():
-						try:
-							form.save()
-						except IntegrityError as e:
-							messages.error(request, "This delegate already has uploaded a position paper")
-							return redirect('delegation:index')
-						messages.info(request, f"Position Paper uploaded for delegate {delegate.delegate_first_name} {delegate.delegate_last_name}")
-						return redirect('delegation:index')
-						
-			else:
-				delegate = Delegate.objects.get(pk=delegate_key)
 				try:
 					current_paper = PositionPaper.objects.get(delegate=delegate)
-					form = PositionPaperForm(instance=current_paper)
 				except ObjectDoesNotExist:
-					form = PositionPaperForm()
+					current_paper = None
 
-			return render(request,
-						  "delegation/upload_position_paper.html",
-						  {'form': form,
-						   'delegate': delegate,
-						   'current_paper': current_paper,
-						   })
+				if request.method == 'POST':
+					if current_paper:
+						form = PositionPaperForm(request.POST, request.FILES, instance=current_paper)
+						if form.is_valid():
+							try:
+								form.save()
+							except IntegrityError as e:
+								messages.error(request, "This delegate already has uploaded a position paper")
+								return redirect('delegation:index')
+							messages.info(request, f"Position Paper uploaded for delegate {delegate.first_name} {delegate.last_name}")
+							return redirect('delegation:index')
+
+					else:
+						paper = PositionPaper(delegate=delegate)
+						form = PositionPaperForm(request.POST, request.FILES, instance=paper)
+						if form.is_valid():
+							try:
+								form.save()
+							except IntegrityError as e:
+								messages.error(request, "This delegate already has uploaded a position paper")
+								return redirect('delegation:index')
+							messages.info(request, f"Position Paper uploaded for delegate {delegate.first_name} {delegate.last_name}")
+							return redirect('delegation:index')
+
+				else:
+					delegate = Delegate.objects.get(pk=delegate_key)
+					try:
+						current_paper = PositionPaper.objects.get(delegate=delegate)
+						form = PositionPaperForm(instance=current_paper)
+					except ObjectDoesNotExist:
+						form = PositionPaperForm()
+
+				return render(request,
+							  "delegation/upload_position_paper.html",
+							  {'form': form,
+							   'delegate': delegate,
+							   'current_paper': current_paper,
+							   })
+
+			except ObjectDoesNotExist:
+			   messages.error(request, "Sorry, you are not allowed to upload a position paper until a delegate has been allocated a country and committee")
+			   return redirect('delegation:index')
 
 	messages.error(request, "You are not authorized to do that")
 	return redirect('users:index')
