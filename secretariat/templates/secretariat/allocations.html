@@ -1,0 +1,100 @@
+{% extends 'header.html' %}
+
+{% block content %}
+<script>
+function allowDrop(ev) {
+  ev.preventDefault();
+}
+
+function drag(ev) {
+  ev.dataTransfer.setData("text", ev.target.id);
+}
+
+function drop(ev) {
+  ev.preventDefault();
+  var data = ev.dataTransfer.getData("text");
+  var allocationID = ev.target.id;
+  var delegateID = document.getElementById(data).id;
+  var allocationID = allocationID.slice(11);
+  var delegateID = delegateID.slice(9);
+
+  $.post( "{% url 'secretariat:add_allocation_delegate' %}",
+  {csrfmiddlewaretoken: '{{ csrf_token }}' ,
+   delegateID : delegateID,
+   allocationID: allocationID
+  },
+  function(data) {
+     if(data.status == 1){
+       location.reload();
+     }
+     else{
+       
+     }
+  });
+}
+</script>
+
+<div class="row">
+  <div class="col s3">
+    <div class="row">
+      <p>Filter:</p>
+      <form method="get">
+        {{ delegate_filter.form.as_p }}
+        <button class="btn" type="submit">Search</button>
+      </form>
+      {% for del in delegate_filter.qs %}
+        {% if not del.allocation %}
+        <div class="card blue-grey darken-1" draggable="true" ondragstart="drag(event)" id="delegate-{{del.pk}}">
+          <div class="card-content white-text">
+            <p class="card-title">{{ del.first_name }} {{ del.last_name }}</p>
+            <p style="font-size:90%">{{ del.delegation }}</p>
+            <p style="font-size:70%">{{ del.past_conferences }} Conferences</p>
+            <p style="font-size:70%">{{ del.committee_preference }}</p>
+            <p style="font-size:70%">{{ del.country_preference }}</p>
+          </div>
+        </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+
+  <div class="col s6 push-s3">
+    <div class="row">
+      <form method="get">
+        {{ allocation_filter.form.as_p }}
+        <button class="btn" type="submit">Select</button>
+      </form>
+
+      <table class="centered">
+        <thead>
+          <tr>
+            <th>Country</th>
+            <th>Delegate</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for allocation in allocation_filter.qs %}
+          <tr>
+            <td>{{ allocation.country }}</td>
+            <td>
+              {% if allocation.delegate %}
+                <div class="card blue-grey darken-1" id="delegate-{{allocation.delegate.pk}}">
+                  <div class="card-content white-text">
+                    <p class="card-title">{{ allocation.delegate.first_name }} {{ allocation.delegate.last_name }}</p>
+                    <p style="font-size:90%">{{ allocation.delegate.delegation }}</p>
+                    <p style="font-size:70%">{{ allocation.delegate.past_conferences }} Conferences</p>
+                  </div>
+                </div>
+              {% else %}
+                <div style="height:150px;" id="allocation-{{ allocation.pk }}" ondrop="drop(event)" ondragover="allowDrop(event)"></div>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

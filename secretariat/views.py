@@ -1,6 +1,7 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, HttpResponse
 from django.contrib import messages
-from .forms import ChairCreationForm
+from django.http import JsonResponse
+from .forms import ChairCreationForm, AllocationForm
 from .models import ProgressSheet, LogisticsRequest
 from delegation.models import Delegate, Allocation, Committee, Country
 from .filters import RequestFilter, DelegateFilter, AllocationFilter
@@ -42,6 +43,32 @@ def allocations(request):
 
 	messages.error(request, "You are not authorized to access that page")
 	return redirect('users:index')
+
+def add_allocation_delegate(request):
+
+	if request.method == "POST":
+		delegateID = request.POST['delegateID']
+		allocationID = request.POST['allocationID']
+
+		try:
+			delegate = Delegate.objects.get(pk=delegateID)
+			allocation = Allocation.objects.get(pk=allocationID)
+			print(delegate)
+			print(allocation)
+			allocation.delegate = delegate
+			allocation.save()
+			response = {
+			 'status': 1,
+			}
+
+		except Exception as e:
+			response = {
+			 'status': 0,
+			}
+
+		return JsonResponse(response)
+
+	return redirect('secretariat:allocations')
 
 def add_chair(request):
 	if request.user.is_authenticated:

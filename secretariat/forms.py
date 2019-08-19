@@ -4,7 +4,7 @@ from django.contrib.auth.forms import UserCreationForm, UserChangeForm
 from tinymce.widgets import TinyMCE
 
 from users.models import User
-from delegation.models import Committee
+from delegation.models import Committee, Allocation
 from .models import Chair, LogisticsRequest, ProgressSheet
 
 class ChairCreationForm(UserCreationForm):
@@ -40,3 +40,9 @@ class LogisticsRequestForm(forms.ModelForm):
     class Meta:
         model = LogisticsRequest
         fields = ['description',]
+
+class AllocationForm(forms.ModelForm):
+
+    class Meta:
+        model = Allocation
+        fields = ['delegate',]

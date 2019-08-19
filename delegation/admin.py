@@ -7,6 +7,7 @@ class DelegateAdmin(admin.ModelAdmin):
 
 class AllocationAdmin(admin.ModelAdmin):
     list_filter = ['committee', 'country']
+    list_display = ['__str__', 'delegate']
 
 class PaperAdmin(admin.ModelAdmin):
     list_display = ['__str__', 'delegate', 'uploaded_at']
