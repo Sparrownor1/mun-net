@@ -5,7 +5,7 @@ from users.models import Delegation
 class Country(models.Model):
 
     name = models.CharField(max_length=200, unique=True)
-    country_committee = models.ManyToManyField('Committee', through='Allocation')
+    committee = models.ManyToManyField('Committee', through='Allocation')
 
     class Meta:
         verbose_name_plural = "Countries"
