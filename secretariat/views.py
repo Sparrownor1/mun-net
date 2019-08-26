@@ -32,13 +32,16 @@ def conference(request):
 			committees = Committee.objects.all().order_by('name')
 			allocations = Allocation.objects.all()
 			allocation_filter = AllocationFilter(request.GET, queryset=allocations)
-			print(request.GET)
 
-			if request.GET['committee'] == '':
+			if request.GET:
+				if request.GET['committee'] != '':
+					selected_committee = Committee.objects.get(pk=request.GET['committee'])
+				else:
+					no_committee_selected = True
+					selected_committee = Committee.objects.none()
+			else:
 				no_committee_selected = True
 				selected_committee = Committee.objects.none()
-			else:
-				selected_committee = Committee.objects.get(pk=request.GET['committee'])
 
 			committee_form = CommitteeForm
 			allocation_form = AllocationForm
@@ -102,12 +105,18 @@ def allocations(request):
 			delegate_filter = DelegateFilter(request.GET, queryset=delegates)
 			allocations = Allocation.objects.all()
 			allocation_filter = AllocationFilter(request.GET, queryset=allocations)
+			no_committee_selected = True
+
+			if request.GET:
+				if request.GET['committee'] != '':
+					no_committee_selected = False
 
 			return render(request,
 						  "secretariat/allocations.html",
 						  {
 						  'delegate_filter': delegate_filter,
 						  'allocation_filter': allocation_filter,
+						  'no_committee_selected': no_committee_selected,
 						  }
 			)
 

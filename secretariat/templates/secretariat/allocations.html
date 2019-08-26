@@ -89,7 +89,7 @@ function drop(ev) {
         {{ allocation_filter.form.as_p }}
         <button class="btn" type="submit">Select</button>
       </form>
-
+      {% if not no_committee_selected %}
       <table class="centered">
         <thead>
           <tr>
@@ -121,6 +121,9 @@ function drop(ev) {
           {% endfor %}
         </tbody>
       </table>
+      {% else %}
+        <h5>Please select a committee</h5>
+      {% endif %}
     </div>
   </div>
 </div>
