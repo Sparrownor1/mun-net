@@ -1,0 +1,32 @@
+{% extends "header.html" %}
+
+{% block content %}
+  <div class="row">
+    <h3 class='center-align'>{{ own_committee }} Position Papers</h3>
+  </div>
+
+  <table class="highlight responsive-table centered">
+    <thead>
+      <tr>
+        <th>Delegate</th>
+        <th>Country</th>
+        <th>Committee</th>
+        <th>Time Stamp</th>
+        <th></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      {% for paper in papers %}
+        <td>{{ paper.delegate }}</td>
+        <td>{{ paper.delegate.allocation.country }}</td>
+        <td>{{ paper.delegate.allocation.committee }}</td>
+        <td>{{ paper.uploaded_at }}</td>
+        <td>
+          <a href="download/{{ paper.pk }}"><button class='btn waves-effect'>Download</button></a>
+        </td>
+      {% endfor %}
+    </tbody>
+  </table>
+
+{% endblock %}

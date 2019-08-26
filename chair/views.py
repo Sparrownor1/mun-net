@@ -1,7 +1,9 @@
 from django.shortcuts import render, redirect, HttpResponse
 from django.contrib import messages
 from django.utils import timezone
+from django.utils.encoding import smart_str
 from datetime import datetime
+import os
 from delegation.models import Committee, PositionPaper, Allocation
 from secretariat.models import LogisticsRequest, Chair, ProgressSheet
 from secretariat.forms import LogisticsRequestForm, ProgressSheetForm
@@ -132,7 +134,31 @@ def position_papers(request):
 
 			# get paper where paper_delegate__allocation_committee = own_committee
 			papers = PositionPaper.objects.filter(delegate__allocation__committee = own_committee)
-			return HttpResponse(papers)
+			return render(
+				request,
+				'chair/position_papers.html',
+				{'papers': papers,
+				 'own_committee': own_committee}
+			)
+
+	messages.error(request, "You are not authorized to access that page")
+	return redirect('users:index')
+
+def download_paper(request, paper_key):
+	if request.user.is_authenticated:
+		if request.user.is_chair:
+
+			profile = Chair.objects.get(user=request.user)
+			own_committee = profile.committee
+			paper = PositionPaper.objects.get(pk=paper_key)
+			if paper.delegate.allocation.committee == own_committee:
+				document = paper.document
+				response = HttpResponse()
+				response['Content-Type']=''
+				response['Content-Disposition'] = "attachment; filename="+str(document)
+				messages.success(request, "Position paper downloaded")
+				return response
+
 
 	messages.error(request, "You are not authorized to access that page")
 	return redirect('users:index')
