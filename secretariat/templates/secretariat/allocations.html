@@ -1,7 +1,32 @@
 {% extends 'header.html' %}
 
 {% block content %}
+<style>
+  .delete {
+      display: inline-block;
+      float:right;
+      margin:5px 5px 0 0;
+      position: absolute;
+      top: 0;
+      right: 0;
+  }
+</style>
 <script>
+function delete_delegate(delegateID) {
+  $.post(
+    "{% url 'secretariat:delete_allocation_delegate' %}",
+    {csrfmiddlewaretoken: '{{ csrf_token }}' ,
+     delegateID : delegateID,
+    },
+    function(data) {
+       if(data.status == 1){
+         location.reload();
+       }
+       else{
+
+       }
+  });
+}
 function allowDrop(ev) {
   ev.preventDefault();
 }
@@ -28,7 +53,7 @@ function drop(ev) {
        location.reload();
      }
      else{
-       
+
      }
   });
 }
@@ -83,6 +108,9 @@ function drop(ev) {
                     <p class="card-title">{{ allocation.delegate.first_name }} {{ allocation.delegate.last_name }}</p>
                     <p style="font-size:90%">{{ allocation.delegate.delegation }}</p>
                     <p style="font-size:70%">{{ allocation.delegate.past_conferences }} Conferences</p>
+                    <button class="btn-flat delete" style='color:white;' id="{{ allocation.delegate.pk }}" onclick="delete_delegate(this.id)">
+                      <i class="small material-icons">clear</i>
+                    </button>
                   </div>
                 </div>
               {% else %}

@@ -15,4 +15,5 @@ urlpatterns = [
         path('requests/change_status/<request_key>/', views.change_status, name='change_status'),
         path('allocations/', views.allocations, name='allocations'),
         path('allocations/add_del/', views.add_allocation_delegate, name='add_allocation_delegate'),
+        path('allocations/delete_del/', views.delete_allocation_delegate, name='delete_allocation_delegate'),
 ]

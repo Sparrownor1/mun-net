@@ -123,13 +123,12 @@ def add_allocation_delegate(request):
 		try:
 			delegate = Delegate.objects.get(pk=delegateID)
 			allocation = Allocation.objects.get(pk=allocationID)
-			print(delegate)
-			print(allocation)
 			allocation.delegate = delegate
 			allocation.save()
 			response = {
 			 'status': 1,
 			}
+			messages.info(request, "Delegate allocated")
 
 		except Exception as e:
 			response = {
@@ -138,7 +137,29 @@ def add_allocation_delegate(request):
 
 		return JsonResponse(response)
 
-	return redirect('secretariat:allocations')
+
+def delete_allocation_delegate(request):
+
+	if request.method == "POST":
+		delegateID = request.POST['delegateID']
+
+		try:
+			allocation = Allocation.objects.get(delegate__pk = delegateID)
+			print(allocation)
+			allocation.delegate = None
+			print('y')
+			allocation.save()
+			response = {
+			 'status': 1,
+			}
+			messages.info(request, "Delegate removed")
+
+		except Exception as e:
+			response = {
+			 'status': 0,
+			}
+
+		return JsonResponse(response)
 
 def add_chair(request):
 	if request.user.is_authenticated:
