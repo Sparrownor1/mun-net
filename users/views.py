@@ -84,5 +84,4 @@ def index(request):
 		if request.user.is_delegation:
 			return redirect("delegation:index")
 
-	return render(request,
-				  "header.html",)
+	return redirect('users:register')
