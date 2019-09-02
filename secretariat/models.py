@@ -3,6 +3,8 @@ from django.utils import timezone
 from delegation.models import Committee
 from users.models import User
 
+from tinymce import HTMLField
+
 # Create your models here.
 class Chair(models.Model):
 
@@ -16,7 +18,7 @@ class ProgressSheet(models.Model):
 
     committee = models.OneToOneField(Committee, on_delete=models.CASCADE)
 
-    data = models.TextField(blank=True, null=True)
+    data = HTMLField(blank=True, null=True)
 
     def __str__(self):
         return f"Progress Sheet: {self.committee}"

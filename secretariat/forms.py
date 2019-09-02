@@ -33,7 +33,6 @@ class ProgressSheetForm(forms.ModelForm):
     class Meta:
         model = ProgressSheet
         fields = ['data', ]
-        widgets = {'data': TinyMCE(attrs={'cols': 80, 'rows': 30}),}
 
 class LogisticsRequestForm(forms.ModelForm):
 
