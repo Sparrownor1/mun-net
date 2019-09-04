@@ -7,10 +7,12 @@ from users.models import User
 from delegation.models import Committee, Allocation, Country, Committee
 from .models import Chair, LogisticsRequest, ProgressSheet
 
+
 class ChairCreationForm(UserCreationForm):
 
     email = forms.EmailField(required=True)
-    committee = forms.ModelChoiceField(queryset=Committee.objects.all(), required=True)
+    committee = forms.ModelChoiceField(
+        queryset=Committee.objects.all(), required=True)
 
     class Meta(UserCreationForm.Meta):
 
@@ -23,8 +25,10 @@ class ChairCreationForm(UserCreationForm):
         user.is_chair = True
         if commit:
             user.save()
-            chair = Chair.objects.create(user=user, committee=self.cleaned_data['committee'])
+            chair = Chair.objects.create(
+                user=user, committee=self.cleaned_data['committee'])
         return user
+
 
 class ProgressSheetForm(forms.ModelForm):
 
@@ -34,21 +38,25 @@ class ProgressSheetForm(forms.ModelForm):
         model = ProgressSheet
         fields = ['data', ]
 
+
 class LogisticsRequestForm(forms.ModelForm):
 
     class Meta:
         model = LogisticsRequest
-        fields = ['description',]
+        fields = ['description', ]
+
 
 class CountryForm(forms.ModelForm):
     class Meta:
         model = Country
-        fields = ['name',]
+        fields = ['name', ]
+
 
 class CommitteeForm(forms.ModelForm):
     class Meta:
         model = Committee
         fields = '__all__'
+
 
 class AllocationForm(forms.ModelForm):
     class Meta:

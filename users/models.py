@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 
 # Create your models here.
+
+
 class User(AbstractUser):
 
     email = models.EmailField(unique=True)
@@ -9,6 +11,7 @@ class User(AbstractUser):
     is_delegation = models.BooleanField('Delegation status', default=False)
     is_chair = models.BooleanField('Chair status', default=False)
     is_secretariat = models.BooleanField('Secretariat status', default=False)
+
 
 class Delegation(models.Model):
 

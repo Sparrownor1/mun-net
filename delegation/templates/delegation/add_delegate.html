@@ -2,10 +2,10 @@
 
 {% block content %}
 
-  <form method="POST">
-      {% csrf_token %}
-      {{form}}
-      <button type="submit" class="btn cyan darken-1">Add Delegate</button>
-  </form>
+<form method="POST">
+  {% csrf_token %}
+  {{form}}
+  <button type="submit" class="btn cyan darken-1">Add Delegate</button>
+</form>
 
 {% endblock %}

@@ -1,68 +1,68 @@
 {% extends 'header.html' %}
 
 {% block content %}
-  <div class="row">
-    <h3 class="center-align">{{own_committee}} Requests</h3>
+<div class="row">
+  <h3 class="center-align">{{own_committee}} Requests</h3>
+</div>
+
+<table class='highlight centered'>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Time-stamp</th>
+      <th>Description</th>
+      <th>Completed</th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    {% for request in past_requests %}
+    <tr>
+      <td>{{request.pk}}</td>
+      <td>{{request.timestamp}}</td>
+      <td>{{request.description}}</td>
+      <td>
+        {% if request.completed == True %}
+        <i class="small material-icons">check</i>
+        {% else %}
+        <i class="small material-icons">clear</i>
+        {% endif %}
+      </td>
+
+      <td>
+        <a href="edit/{{request.pk}}">
+          <button class="btn-floating yellow darken-1"><i class="material-icons">edit</i></button>
+        </a>
+      </td>
+      <td>
+        <a href="#modal{{request.pk}}" class="modal-trigger">
+          <button class="btn-floating red darken-1"><i class="material-icons">delete</i></button>
+        </a>
+      </td>
+
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<div class="fixed-action-btn">
+  <a href="add/">
+    <button class="btn-floating btn-large green"><i class="material-icons">add</i></button>
+  </a>
+</div>
+
+{% for r in past_requests %}
+<div id="modal{{r.pk}}" class="modal">
+  <div class="modal-content">
+    <p>Are you sure you want to delete Request {{r.pk}}: {{r.description}}?</p>
   </div>
-
-  <table class='highlight centered'>
-    <thead>
-      <tr>
-        <th>ID</th>
-        <th>Time-stamp</th>
-        <th>Description</th>
-        <th>Completed</th>
-        <th></th>
-        <th></th>
-      </tr>
-    </thead>
-
-    <tbody>
-      {% for request in past_requests %}
-        <tr>
-          <td>{{request.pk}}</td>
-          <td>{{request.timestamp}}</td>
-          <td>{{request.description}}</td>
-          <td>
-            {% if request.completed == True %}
-              <i class="small material-icons">check</i>
-            {% else %}
-              <i class="small material-icons">clear</i>
-            {% endif %}
-          </td>
-
-          <td>
-            <a href="edit/{{request.pk}}">
-              <button class="btn-floating yellow darken-1"><i class="material-icons">edit</i></button>
-            </a>
-          </td>
-          <td>
-            <a href="#modal{{request.pk}}" class="modal-trigger">
-              <button class="btn-floating red darken-1"><i class="material-icons">delete</i></button>
-            </a>
-          </td>
-
-        </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-
-  <div class="fixed-action-btn">
-    <a href="add/">
-      <button class="btn-floating btn-large green"><i class="material-icons">add</i></button>
-    </a>
+  <div class="modal-footer">
+    <a href="#" class="modal-close waves-effect waves-green btn-flat">No</a>
+    <a href="delete/{{r.pk}}" class="modal-close waves-effect waves-green btn-flat">Yes</a>
   </div>
-
-  {% for r in past_requests %}
-  <div id="modal{{r.pk}}"class="modal">
-    <div class="modal-content">
-      <p>Are you sure you want to delete Request {{r.pk}}: {{r.description}}?</p>
-    </div>
-    <div class="modal-footer">
-      <a href="#" class="modal-close waves-effect waves-green btn-flat">No</a>
-      <a href="delete/{{r.pk}}" class="modal-close waves-effect waves-green btn-flat">Yes</a>
-    </div>
-  </div>
-  {% endfor %}
+</div>
+{% endfor %}
 
 {% endblock %}
