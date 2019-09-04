@@ -6,13 +6,17 @@ from users.models import User
 from tinymce import HTMLField
 
 # Create your models here.
+
+
 class Chair(models.Model):
 
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    committee = models.ForeignKey(Committee, on_delete=models.SET_NULL, null=True)
+    committee = models.ForeignKey(
+        Committee, on_delete=models.SET_NULL, null=True)
 
     def __str__(self):
         return f"Chair: {self.user} - {self.committee}"
+
 
 class ProgressSheet(models.Model):
 
@@ -22,6 +26,7 @@ class ProgressSheet(models.Model):
 
     def __str__(self):
         return f"Progress Sheet: {self.committee}"
+
 
 class LogisticsRequest(models.Model):
 

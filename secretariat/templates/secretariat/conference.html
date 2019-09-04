@@ -1,53 +1,57 @@
 {% extends 'header.html' %}
 
 {% block content %}
-  <div class="row">
-    <div class="col s4">
-      <ul class='collection with-header'>
-        <li class="collection-header"><h4>Committees</h4></li>
-        {% for committee in committees %}
-        <li class='collection-item'>{{ committee }}</li>
-        {% endfor %}
-      </ul>
-      <br>
-      <form method="POST" action="{% url 'secretariat:add_committee' %}">
-          {% csrf_token %}
-          {{ committee_form.as_p }}
-          <button type="submit" class="btn cyan darken-1">Add Committee</button>
-      </form>
-    </div>
-
-    <div class="col s4">
-      <form method="get">
-        {{ allocation_filter.form.as_p }}
-        <button class="btn" type="submit">Select</button>
-      </form>
-      <br>
-
-      <ul class='collection with-header'>
-        <li class="collection-header"><h4>Countries</h4></li>
-        {% if no_committee_selected %}
-          <li class='collection-item'>Please select a committee</li>
-        {% else %}
-          {% for allocation in allocation_filter.qs %}
-            <li class='collection-item'>{{ allocation.country }}</li>
-          {% endfor %}
-        {% endif %}
-      </ul>
-
-      {% if selected_committee %}
-      <form method="POST" action="">
-          {% csrf_token %}
-          {{ allocation_form.as_p }}
-          <button type="submit" class="btn cyan darken-1">Add Country</button>
-      </form>
-      {% endif %}
-
-    </div>
-
-    <div class="col s4">
-    </div>
+<div class="row">
+  <div class="col s4">
+    <ul class='collection with-header'>
+      <li class="collection-header">
+        <h4>Committees</h4>
+      </li>
+      {% for committee in committees %}
+      <li class='collection-item'>{{ committee }}</li>
+      {% endfor %}
+    </ul>
+    <br>
+    <form method="POST" action="{% url 'secretariat:add_committee' %}">
+      {% csrf_token %}
+      {{ committee_form.as_p }}
+      <button type="submit" class="btn cyan darken-1">Add Committee</button>
+    </form>
   </div>
+
+  <div class="col s4">
+    <form method="get">
+      {{ allocation_filter.form.as_p }}
+      <button class="btn" type="submit">Select</button>
+    </form>
+    <br>
+
+    <ul class='collection with-header'>
+      <li class="collection-header">
+        <h4>Countries</h4>
+      </li>
+      {% if no_committee_selected %}
+      <li class='collection-item'>Please select a committee</li>
+      {% else %}
+      {% for allocation in allocation_filter.qs %}
+      <li class='collection-item'>{{ allocation.country }}</li>
+      {% endfor %}
+      {% endif %}
+    </ul>
+
+    {% if selected_committee %}
+    <form method="POST" action="">
+      {% csrf_token %}
+      {{ allocation_form.as_p }}
+      <button type="submit" class="btn cyan darken-1">Add Country</button>
+    </form>
+    {% endif %}
+
+  </div>
+
+  <div class="col s4">
+  </div>
+</div>
 
 
 {% endblock %}
