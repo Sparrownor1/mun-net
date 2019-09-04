@@ -5,9 +5,6 @@ app_name = 'secretariat'
 
 urlpatterns = [
         path('', views.index, name='index'),
-        path('conference/', views.conference, name='conference'),
-        path('conference/add_committee/', views.add_committee, name='add_committee'),
-        path('conference/countries/', views.countries, name='countries'),
         path('add_chair/', views.add_chair, name='add_chair'),
         path('progress/', views.progress, name='progress'),
         path('progress/<slug>/', views.progress_sheet, name='progress_sheet'),

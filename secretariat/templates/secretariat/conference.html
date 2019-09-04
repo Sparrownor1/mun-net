@@ -36,14 +36,13 @@
       </ul>
 
       {% if selected_committee %}
-        {{ selected_committee }}
-      {% endif %}
-      
       <form method="POST" action="">
           {% csrf_token %}
           {{ allocation_form.as_p }}
-          <!-- <button type="submit" class="btn cyan darken-1">Add Committee</button> -->
+          <button type="submit" class="btn cyan darken-1">Add Country</button>
       </form>
+      {% endif %}
+
     </div>
 
     <div class="col s4">

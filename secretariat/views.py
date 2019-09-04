@@ -17,6 +17,7 @@ def index(request):
 				"Progress Sheets": "progress/",
 				"Logistics Requests": "requests/",
 			}
+
 			return render(request,
 						  "secretariat/index.html",
 						  {"pages": pages})
@@ -24,78 +25,6 @@ def index(request):
 	messages.error(request, "You are not authorized to access that page")
 	return redirect('users:index')
 
-def conference(request):
-	if request.user.is_authenticated:
-		if request.user.is_superuser:
-
-			no_committee_selected = False
-			committees = Committee.objects.all().order_by('name')
-			allocations = Allocation.objects.all()
-			allocation_filter = AllocationFilter(request.GET, queryset=allocations)
-
-			if request.GET:
-				if request.GET['committee'] != '':
-					selected_committee = Committee.objects.get(pk=request.GET['committee'])
-				else:
-					no_committee_selected = True
-					selected_committee = Committee.objects.none()
-			else:
-				no_committee_selected = True
-				selected_committee = Committee.objects.none()
-
-			committee_form = CommitteeForm
-			allocation_form = AllocationForm
-
-			return render(request,
-						  "secretariat/conference.html",
-						  {"committees": committees,
-						  "committee_form": committee_form,
-						  "allocation_form": allocation_form,
-						  "allocation_filter": allocation_filter,
-						  "no_committee_selected": no_committee_selected,
-						  "selected_committee": selected_committee})
-
-	messages.error(request, "You are not authorized to access that page")
-	return redirect('users:index')
-
-def add_committee(request):
-	if request.user.is_authenticated:
-		if request.user.is_superuser:
-
-			if request.method == 'POST':
-				if request.POST['name']:
-					form = CommitteeForm(request.POST)
-					new_committee = form.save()
-					messages.success(request, "New committee added")
-					return redirect('secretariat:conference')
-
-	messages.error(request, "You are not authorized to access that page")
-	return redirect('users:index')
-
-def countries(request):
-	if request.user.is_authenticated:
-		if request.user.is_superuser:
-
-			countries = Country.objects.all().order_by('name')
-
-			if request.method == 'POST':
-				form = CountryForm(request.POST)
-				if form.is_valid():
-					new_country = form.save()
-					messages.success(request, "New country added")
-					return redirect('secretariat:countries')
-
-			form = CountryForm()
-			return render(
-				request,
-				"secretariat/countries.html",
-				{'form': form,
-				'countries': countries}
-			)
-
-
-	messages.error(request, "You are not authorized to access that page")
-	return redirect('users:index')
 
 def allocations(request):
 	if request.user.is_authenticated:
@@ -107,9 +36,9 @@ def allocations(request):
 			allocation_filter = AllocationFilter(request.GET, queryset=allocations)
 			no_committee_selected = True
 
-			if request.GET:
-				if request.GET['committee'] != '':
-					no_committee_selected = False
+			if request.GET and 'committee' in request.GET:
+					if request.GET['committee']:
+						no_committee_selected = False
 
 			return render(request,
 						  "secretariat/allocations.html",
