@@ -29,18 +29,10 @@
       <td>{{d.country_preference}}</td>
 
       <td>
-        {% for a in allocations %}
-        {% if a.delegate == d %}
-        {{a.committee}}
-        {% endif %}
-        {% endfor %}
+        {{d.allocation.committee}}
       </td>
       <td>
-        {% for a in allocations %}
-        {% if a.delegate == d %}
-        {{a.country}}
-        {% endif %}
-        {% endfor %}
+        {{d.allocation.country}}
       </td>
 
       <td><a href="upload_position_paper/{{d.pk}}">
