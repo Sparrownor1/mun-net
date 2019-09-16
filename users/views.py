@@ -20,12 +20,13 @@ def register(request):
             messages.info(request, f"You are now logged in as: {username}")
             return redirect("delegation:edit_delegation")
         else:
-            for msg in form.error_messages:
-                messages.error(request, f"{msg}: {form.error_messages[msg]}")
+            for field in form:
+                for error in field.errors:
+                    messages.error(request, error)
 
-                return render(request=request,
-                              template_name="users/register.html",
-                              context={"form": form})
+            return render(request=request,
+                          template_name="users/register.html",
+                          context={"form": form})
 
     form = DelegationSignUpForm
     return render(request,

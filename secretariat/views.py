@@ -87,9 +87,7 @@ def delete_allocation_delegate(request):
 
         try:
             allocation = Allocation.objects.get(delegate__pk=delegateID)
-            print(allocation)
             allocation.delegate = None
-            print('y')
             allocation.save()
             response = {
                 'status': 1,
@@ -117,13 +115,13 @@ def add_chair(request):
                         request, f"You have successfully created a chair account: {username}")
 
                 else:
-                    for msg in form.error_messages:
-                        messages.error(
-                            request, f"{msg}: {form.error_messages[msg]}")
+                    for field in form:
+                        for error in field.errors:
+                            messages.error(request, error)
 
-                        return render(request=request,
-                                      template_name="secretariat/add_chair.html",
-                                      context={"form": form})
+                    return render(request=request,
+                                  template_name="secretariat/add_chair.html",
+                                  context={"form": form})
 
             form = ChairCreationForm
             return render(request,
