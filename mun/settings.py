@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'tinymce',
+    'django_extensions',
 
     'users.apps.UsersConfig',
     'delegation.apps.DelegationConfig',
