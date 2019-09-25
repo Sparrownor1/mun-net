@@ -9,6 +9,7 @@ from .forms import DelegateForm, DelegationForm, PositionPaperForm
 
 # Create your views here.
 def index(request):
+	TITLE = "Home"
 	current_user = request.user
 	if current_user.is_authenticated:
 		if current_user.is_delegation:
@@ -23,7 +24,8 @@ def index(request):
 
 			return render(request,
 						  "delegation/index.html",
-						  {"delegates": delegates_in_delegation,
+						  {"title": TITLE,
+						   "delegates": delegates_in_delegation,
 						   "allocations": allocations}
 						   )
 
@@ -31,6 +33,7 @@ def index(request):
 	return redirect('users:index')
 
 def add_delegate(request):
+	TITLE = "Add Delegate"
 	if request.user.is_authenticated:
 		if request.user.is_delegation:
 
@@ -52,7 +55,8 @@ def add_delegate(request):
 					form = DelegateForm()
 					return render(request,
 								  "delegation/add_delegate.html",
-								  {"form": form}
+								  {"title": TITLE,
+								   "form": form}
 					)
 			else:
 				messages.error(request, "Please change your delegation size before you add another delegate")
@@ -62,6 +66,7 @@ def add_delegate(request):
 	return redirect('users:index')
 
 def edit_delegate(request, delegate_key):
+	TITLE = "Edit Delegate"
 	if request.user.is_authenticated:
 		if request.user.is_delegation:
 
@@ -75,10 +80,16 @@ def edit_delegate(request, delegate_key):
 
 			else:
 				delegate = Delegate.objects.get(pk=delegate_key)
+
+				if delegate.delegation != Delegation.objects.get(user=request.user):
+					messages.error(request, 'You cannot do that')
+					return redirect('users:index')
+
 				form = DelegateForm(instance=delegate)
 				return render(request,
 							  "delegation/edit_delegate.html",
-							  {"form": form})
+							  {"title": TITLE,
+							   "form": form})
 
 	messages.error(request, "You are not authorized to access that page")
 	return redirect('users:index')
@@ -88,6 +99,11 @@ def delete_delegate(request, delegate_key):
 		if request.user.is_delegation:
 
 			delegate = Delegate.objects.get(pk=delegate_key)
+
+			if delegate.delegation != Delegation.objects.get(user=request.user):
+				messages.error(request, 'You cannot do that')
+				return redirect('users:index')
+
 			delegate.delete()
 			messages.info(request, "You have deleted a delegate")
 			return redirect("delegation:index")
@@ -100,6 +116,10 @@ def upload_position_paper(request, delegate_key):
 		if request.user.is_delegation:
 
 			delegate = Delegate.objects.get(pk=delegate_key)
+
+			if delegate.delegation != Delegation.objects.get(user=request.user):
+				messages.error(request, 'You cannot do that')
+				return redirect('users:index')
 
 			try:
 				Allocation.objects.get(delegate=delegate)

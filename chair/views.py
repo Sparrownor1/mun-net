@@ -12,6 +12,7 @@ from secretariat.forms import LogisticsRequestForm, ProgressSheetForm
 
 
 def index(request):
+    TITLE = "Home"
     if request.user.is_authenticated:
         if request.user.is_chair:
 
@@ -22,13 +23,15 @@ def index(request):
             }
             return render(request,
                           "chair/index.html",
-                          {"pages": pages})
+                          {"title": TITLE,
+                           "pages": pages})
 
     messages.error(request, "You are not authorized to access that page")
     return redirect('users:index')
 
 
 def sheet(request):
+    TITLE = "Progress Sheet"
     if request.user.is_authenticated:
         if request.user.is_chair:
 
@@ -49,7 +52,8 @@ def sheet(request):
                 form = ProgressSheetForm(instance=sheet)
                 return render(request,
                               "chair/sheet.html",
-                              {"form": form,
+                              {"title": TITLE,
+                               "form": form,
                                "own_committee": own_committee})
 
     messages.error(request, "You are not authorized to access that page")
@@ -57,6 +61,7 @@ def sheet(request):
 
 
 def requests(request):
+    TITLE = "View Requests"
     if request.user.is_authenticated:
         if request.user.is_chair:
 
@@ -67,7 +72,8 @@ def requests(request):
 
             return render(request,
                           "chair/requests.html",
-                          {"past_requests": past_requests,
+                          {"title": TITLE,
+                           "past_requests": past_requests,
                            "own_committee": own_committee})
 
     messages.error(request, "You are not authorized to access that page")
@@ -75,6 +81,7 @@ def requests(request):
 
 
 def add_request(request):
+    TITLE = "Add Request"
     if request.user.is_authenticated:
         if request.user.is_chair:
 
@@ -92,7 +99,8 @@ def add_request(request):
                 form = LogisticsRequestForm()
                 return render(request,
                               "chair/add_request.html",
-                              {"form": form}
+                              {"title": TITLE,
+                               "form": form}
                               )
 
     messages.error(request, "You are not authorized to access that page")
@@ -100,6 +108,7 @@ def add_request(request):
 
 
 def edit_request(request, request_key):
+    TITLE = "Edit Request"
     if request.user.is_authenticated:
         if request.user.is_chair:
 
@@ -117,7 +126,8 @@ def edit_request(request, request_key):
                 form = LogisticsRequestForm(instance=logisticsrequest)
                 return render(request,
                               "chair/edit_request.html",
-                              {"form": form})
+                              {"title": TITLE,
+                               "form": form})
 
     messages.error(request, "You are not authorized to access that page")
     return redirect('users:index')
@@ -137,6 +147,7 @@ def delete_request(request, request_key):
 
 
 def position_papers(request):
+    TITLE = "Position Papers"
     if request.user.is_authenticated:
         if request.user.is_chair:
 
@@ -149,7 +160,8 @@ def position_papers(request):
             return render(
                 request,
                 'chair/position_papers.html',
-                {'papers': papers,
+                {"title": TITLE,
+                 'papers': papers,
                  'own_committee': own_committee}
             )
 

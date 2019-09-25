@@ -12,6 +12,9 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
 
   <script src="//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery.min.js"></script>
+  {% if title %}
+  <title>{{title}}</title>
+  {% endif %}
 </head>
 
   {% timezone "Asia/Dubai" %}

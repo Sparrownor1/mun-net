@@ -9,6 +9,8 @@ from .forms import DelegationSignUpForm, NewUserChangeForm
 
 def register(request):
 
+    TITLE = "Register"
+
     if request.method == "POST":
         form = DelegationSignUpForm(request.POST)
         if form.is_valid():
@@ -31,7 +33,8 @@ def register(request):
     form = DelegationSignUpForm
     return render(request,
                   "users/register.html",
-                  {"form": form}
+                  {"form": form,
+                   "title": TITLE}
                   )
 
 
@@ -69,6 +72,8 @@ def logout_request(request):
 
 def account(request):
 
+    TITLE = "My Account"
+
     if request.method == "POST":
         form = NewUserChangeForm(request.POST, instance=request.user)
         if form.is_valid():
@@ -79,7 +84,8 @@ def account(request):
         form = NewUserChangeForm(instance=request.user)
         return render(request,
                       "users/account.html",
-                      {"form": form})
+                      {"title": TITLE,
+                      "form": form})
 
 
 def index(request):

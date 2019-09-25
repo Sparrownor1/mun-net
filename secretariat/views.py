@@ -10,6 +10,7 @@ from .filters import RequestFilter, DelegateFilter, AllocationFilter
 
 
 def index(request):
+    TITLE = "Home"
     if request.user.is_authenticated:
         if request.user.is_secretariat:
 
@@ -22,13 +23,15 @@ def index(request):
 
             return render(request,
                           "secretariat/index.html",
-                          {"pages": pages})
+                          {"title": TITLE,
+                          "pages": pages})
 
     messages.error(request, "You are not authorized to access that page")
     return redirect('users:index')
 
 
 def allocations(request):
+    TITLE = "Allocations"
     if request.user.is_authenticated:
         if request.user.is_secretariat:
 
@@ -46,6 +49,7 @@ def allocations(request):
             return render(request,
                           "secretariat/allocations.html",
                           {
+                              "title": TITLE,
                               'delegate_filter': delegate_filter,
                               'allocation_filter': allocation_filter,
                               'no_committee_selected': no_committee_selected,
@@ -103,6 +107,7 @@ def delete_allocation_delegate(request):
 
 
 def add_chair(request):
+    TITLE = "Add Chair Account"
     if request.user.is_authenticated:
         if request.user.is_secretariat:
 
@@ -121,12 +126,14 @@ def add_chair(request):
 
                     return render(request=request,
                                   template_name="secretariat/add_chair.html",
-                                  context={"form": form})
+                                  context={"title": TITLE,
+                                           "form": form})
 
             form = ChairCreationForm
             return render(request,
                           "secretariat/add_chair.html",
-                          {"form": form}
+                          {"title": TITLE,
+                           "form": form}
                           )
 
     messages.error(request, "You are not authorized to access that page")
@@ -134,19 +141,22 @@ def add_chair(request):
 
 
 def progress(request):
+    TITLE = "Progress Sheets"
     if request.user.is_authenticated:
         if request.user.is_secretariat:
 
             sheets = ProgressSheet.objects.all()
             return render(request,
                           "secretariat/progress.html",
-                          {"sheets": sheets})
+                          {"title": TITLE,
+                           "sheets": sheets})
 
     messages.error(request, "You are not authorized to access that page")
     return redirect('users:index')
 
 
 def progress_sheet(request, slug):
+    TITLE = "Progress Sheet"
     if request.user.is_authenticated:
         if request.user.is_secretariat:
 
@@ -156,7 +166,8 @@ def progress_sheet(request, slug):
 
             return render(request,
                           "secretariat/progress_sheet.html",
-                          {"sheet": sheet,
+                          {"title": TITLE,
+                           "sheet": sheet,
                            "other_sheets": other_sheets})
 
     messages.error(request, "You are not authorized to access that page")
@@ -164,6 +175,7 @@ def progress_sheet(request, slug):
 
 
 def requests(request):
+    TITLE = "Requests"
     if request.user.is_authenticated:
         if request.user.is_secretariat:
 
@@ -172,7 +184,8 @@ def requests(request):
 
             return render(request,
                           "secretariat/requests.html",
-                          {'requests': request_list,
+                          {"title": TITLE,
+                           'requests': request_list,
                            'filter': request_filter})
 
     messages.error(request, "You are not authorized to access that page")
