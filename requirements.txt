@@ -25,19 +25,11 @@ kiwisolver==1.0.1
 Markdown==3.0.1
 MarkupSafe==1.1.1
 numpy==1.15.2
-<<<<<<< HEAD
-=======
-opencv-python==4.1.0.25
->>>>>>> ba153d63c913d30dee51e64182ef9135fe1dcab6
 Pillow==5.3.0
 protobuf==3.6.1
 psycopg2-binary==2.8.3
 pycparser==2.19
 pydotplus==2.0.2
-<<<<<<< HEAD
-=======
-pygame==1.9.4
->>>>>>> ba153d63c913d30dee51e64182ef9135fe1dcab6
 pymunk==5.4.0
 pyparsing==2.2.2
 python-dateutil==2.7.3

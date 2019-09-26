@@ -165,11 +165,7 @@ STATICFILES_DIRS = [
 ]
 
 #  Add configuration for static files storage using whitenoise
-<<<<<<< HEAD
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
-=======
-STATICFILES_STORAGE = 'whitenoise.django.GzipManifestStaticFilesStorage'
->>>>>>> ba153d63c913d30dee51e64182ef9135fe1dcab6
 
 import dj_database_url
 prod_db  =  dj_database_url.config(conn_max_age=500)
