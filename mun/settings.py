@@ -25,7 +25,7 @@ SECRET_KEY = '8x&7*e=9cdmp#@-#(=_5w9h6i&n8ii4=088^s(t)*+c^s056mg'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['mun-net.herokuapp.com']
+ALLOWED_HOSTS = ['mun-net.herokuapp.com', '127.0.0.1']
 
 AUTH_USER_MODEL = 'users.User'
 
