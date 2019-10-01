@@ -10,14 +10,18 @@ from .forms import DelegateForm, DelegationForm, PositionPaperForm
 # Create your views here.
 def index(request):
 	TITLE = "Home"
+	#Authenticate and authorize user
 	current_user = request.user
 	if current_user.is_authenticated:
 		if current_user.is_delegation:
 
+			#Get delegates from users delegation
 			user_del = Delegation.objects.get(user=current_user)
 			delegates_in_delegation = Delegate.objects.filter(delegation=user_del)
+			#Get allocations from delegates
 			allocations = Allocation.objects.filter(delegate__delegation=user_del)
 
+			#Check if user has more delegates in delegation than is specified
 			if len(delegates_in_delegation) > user_del.size:
 				messages.error(request, "You have more delegates than your delegation size states, please change it")
 				return redirect('delegation:edit_delegation')
@@ -34,14 +38,16 @@ def index(request):
 
 def add_delegate(request):
 	TITLE = "Add Delegate"
+	#Check if user is authorized to access page
 	if request.user.is_authenticated:
 		if request.user.is_delegation:
 
+			#Get delegates in delegation
 			user_del = Delegation.objects.get(user=request.user)
 			delegates_in_delegation = Delegate.objects.filter(delegation=user_del)
 
 			if len(delegates_in_delegation) < user_del.size:
-
+				#When form is posted, create a delegate in delegation
 				if request.method == "POST":
 					newDel = Delegate(delegation = Delegation.objects.get(user=request.user),)
 					form = DelegateForm(request.POST, instance=newDel)
@@ -67,11 +73,14 @@ def add_delegate(request):
 
 def edit_delegate(request, delegate_key):
 	TITLE = "Edit Delegate"
+	#Check if user is authorized to access page
 	if request.user.is_authenticated:
 		if request.user.is_delegation:
 
 			if request.method == "POST":
+				#Get delegate user wants to edit
 				delegate = Delegate.objects.get(pk=delegate_key)
+				#Fill in current details to form
 				form = DelegateForm(request.POST, instance=delegate)
 				if form.is_valid():
 					updated_delegate = form.save()
@@ -79,12 +88,15 @@ def edit_delegate(request, delegate_key):
 					return redirect("delegation:index")
 
 			else:
+				#Get delegate user wants to edit
 				delegate = Delegate.objects.get(pk=delegate_key)
 
+				#Check if delegate is in users delegation
 				if delegate.delegation != Delegation.objects.get(user=request.user):
 					messages.error(request, 'You cannot do that')
 					return redirect('users:index')
 
+				#Fill in current details to form
 				form = DelegateForm(instance=delegate)
 				return render(request,
 							  "delegation/edit_delegate.html",
@@ -100,10 +112,12 @@ def delete_delegate(request, delegate_key):
 
 			delegate = Delegate.objects.get(pk=delegate_key)
 
+			#Check if delegate is in users delegation
 			if delegate.delegation != Delegation.objects.get(user=request.user):
 				messages.error(request, 'You cannot do that')
 				return redirect('users:index')
 
+			#Delete
 			delegate.delete()
 			messages.info(request, "You have deleted a delegate")
 			return redirect("delegation:index")
@@ -116,7 +130,7 @@ def upload_position_paper(request, delegate_key):
 		if request.user.is_delegation:
 
 			delegate = Delegate.objects.get(pk=delegate_key)
-
+			#Check if delegate is in delegation
 			if delegate.delegation != Delegation.objects.get(user=request.user):
 				messages.error(request, 'You cannot do that')
 				return redirect('users:index')
@@ -130,7 +144,9 @@ def upload_position_paper(request, delegate_key):
 					current_paper = None
 
 				if request.method == 'POST':
+					#If delegate has position paper
 					if current_paper:
+						#Display uploaded file
 						form = PositionPaperForm(request.POST, request.FILES, instance=current_paper)
 						if form.is_valid():
 							try:
@@ -142,11 +158,14 @@ def upload_position_paper(request, delegate_key):
 							return redirect('delegation:index')
 
 					else:
+						#Create position paper for delegate
 						paper = PositionPaper(delegate=delegate)
+						#Create form for position paper
 						form = PositionPaperForm(request.POST, request.FILES, instance=paper)
 						if form.is_valid():
 							try:
 								form.save()
+							#If database throws error
 							except IntegrityError as e:
 								messages.error(request, "This delegate already has uploaded a position paper")
 								return redirect('delegation:index')
@@ -183,12 +202,13 @@ def edit_delegation(request):
 			user_del = Delegation.objects.get(user=current_user)
 
 			if request.method == "POST":
+				#Save delegation details
 				form = DelegationForm(request.POST, instance=user_del)
 				if form.is_valid():
 					updated_delegation = form.save()
 					messages.info(request, "Delegation information saved")
 					return redirect("delegation:index")
-
+			#Show delegation details
 			else:
 				form = DelegationForm(instance=user_del)
 				return render(request,

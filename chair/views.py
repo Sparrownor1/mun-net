@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect, HttpResponse
 from django.contrib import messages
 from django.utils import timezone
 from django.utils.encoding import smart_str
+from django.core.exceptions import ObjectDoesNotExist
 from datetime import datetime
 import os
 from delegation.models import Committee, PositionPaper, Allocation
@@ -35,9 +36,16 @@ def sheet(request):
     if request.user.is_authenticated:
         if request.user.is_chair:
 
+            #Get user profile and committee
             profile = Chair.objects.get(user=request.user)
             own_committee = profile.committee
-            sheet = ProgressSheet.objects.get(committee=own_committee)
+            try:
+                #Get sheet of committee
+                sheet = ProgressSheet.objects.get(committee=own_committee)
+            except ObjectDoesNotExist:
+                #If committee does not have sheet, create it
+                new_sheet = ProgressSheet(committee=own_committee)
+                new_sheet.save()
 
             if request.method == "POST":
                 sheet = ProgressSheet.objects.get(committee=own_committee)
@@ -48,6 +56,7 @@ def sheet(request):
                     return redirect('chair:sheet')
 
             else:
+                #Render sheet as form
                 sheet = ProgressSheet.objects.get(committee=own_committee)
                 form = ProgressSheetForm(instance=sheet)
                 return render(request,
@@ -65,8 +74,10 @@ def requests(request):
     if request.user.is_authenticated:
         if request.user.is_chair:
 
+            #Get profile and committee
             profile = Chair.objects.get(user=request.user)
             own_committee = profile.committee
+            #Get requests and order them chronologically
             past_requests = LogisticsRequest.objects.filter(
                 committee=own_committee).order_by('-timestamp')
 
@@ -86,8 +97,10 @@ def add_request(request):
         if request.user.is_chair:
 
             if request.method == "POST":
+                #Create request when form is submitted
                 new_request = LogisticsRequest(
                     committee=Chair.objects.get(user=request.user).committee)
+                #Fill in description field
                 form = LogisticsRequestForm(request.POST, instance=new_request)
 
                 if form.is_valid():
@@ -112,6 +125,7 @@ def edit_request(request, request_key):
     if request.user.is_authenticated:
         if request.user.is_chair:
 
+            #Get and edit request
             if request.method == "POST":
                 logisticsrequest = LogisticsRequest.objects.get(pk=request_key)
                 form = LogisticsRequestForm(
@@ -137,6 +151,7 @@ def delete_request(request, request_key):
     if request.user.is_authenticated:
         if request.user.is_chair:
 
+            #Delete request
             logisticsrequest = LogisticsRequest.objects.get(pk=request_key)
             logisticsrequest.delete()
             messages.info(request, "You have deleted the request")
@@ -154,6 +169,7 @@ def position_papers(request):
             profile = Chair.objects.get(user=request.user)
             own_committee = profile.committee
 
+            #Filter all the papers linked to a delegate in users committee
             # get paper where paper_delegate__allocation_committee = own_committee
             papers = PositionPaper.objects.filter(
                 delegate__allocation__committee=own_committee)
@@ -176,10 +192,14 @@ def download_paper(request, paper_key):
             profile = Chair.objects.get(user=request.user)
             own_committee = profile.committee
             paper = PositionPaper.objects.get(pk=paper_key)
+            #Check if user is allowed to download paper
             if paper.delegate.allocation.committee == own_committee:
+                #Get file path
                 document = paper.document
+                #Create response
                 response = HttpResponse()
                 response['Content-Type'] = ''
+                #Input file path to attach file to the response
                 response['Content-Disposition'] = "attachment; filename=" + \
                     str(document)
                 messages.success(request, "Position paper downloaded")
