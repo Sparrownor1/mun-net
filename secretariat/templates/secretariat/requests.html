@@ -15,8 +15,7 @@
         <th>Committee</th>
         <th>Description</th>
         <th>Timestamp</th>
-        <th>Completed</th>
-        <th>Change Status</th>
+        <th>Completion Status</th>
       </tr>
     </thead>
 
@@ -28,26 +27,19 @@
         <td>{{request.description}}</td>
         <td>{{request.timestamp}}</td>
         <td>
-          {% if request.completed == True %}
-          <button class="btn-floating green darken-1">
-            <i class="small material-icons">check</i>
-          </button>
-          {% else %}
-          <button class="btn-floating red darken-1">
-            <i class="small material-icons">clear</i>
-          </button>
-          {% endif %}
-        </td>
-
-        <td>
           <a href="change_status/{{request.pk}}">
             {% if request.completed == True %}
-              <i class="small material-icons red-text">clear</i>
+            <button class="btn-floating green darken-1">
+              <i class="small material-icons">check</i>
+            </button>
             {% else %}
-              <i class="small material-icons green-text">check</i>
+            <button class="btn-floating red darken-1">
+              <i class="small material-icons">clear</i>
+            </button>
             {% endif %}
           </a>
         </td>
+
       </tr>
       {% endfor %}
     </tbody>
