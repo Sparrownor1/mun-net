@@ -161,3 +161,4 @@ dmypy.json
 /media
 migrations/
 *.dot
+mun/settings.py
