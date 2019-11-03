@@ -7,6 +7,6 @@
       {{form.as_p}}
       <button type="submit" class="btn cyan darken-1">Register a Delegation Account</button>
   </form>
-  If you already have an account <a href="/users/login" target="blank"><strong>login</strong></a> instead.
+  If you already have an account <a href="{% url 'users:register' %}" target="blank"><strong>login</strong></a> instead.
 
 {% endblock %}

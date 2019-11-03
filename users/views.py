@@ -5,7 +5,15 @@ from django.contrib.auth.forms import AuthenticationForm
 from .forms import DelegationSignUpForm, NewUserChangeForm
 
 # Create your views here.
+def home(request):
 
+    TITLE = "MUN-Net"
+
+    return render(
+        request,
+        "users/index.html",
+        {"title":TITLE}
+    )
 
 def register(request):
 
@@ -28,7 +36,8 @@ def register(request):
 
             return render(request=request,
                           template_name="users/register.html",
-                          context={"form": form})
+                          context={"form": form,
+                                   "title": TITLE})
 
     form = DelegationSignUpForm
     return render(request,
@@ -98,4 +107,4 @@ def index(request):
         if request.user.is_delegation:
             return redirect("delegation:index")
 
-    return redirect('users:register')
+    return redirect('users:home')

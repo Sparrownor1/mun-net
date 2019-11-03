@@ -6,7 +6,7 @@ class DelegateAdmin(admin.ModelAdmin):
     list_filter = ['delegation', ]
 
 class AllocationAdmin(admin.ModelAdmin):
-    list_filter = ['committee', 'country']
+    list_filter = ['committee', 'country', 'delegate__delegation']
     list_display = ['__str__', 'delegate']
 
 class PaperAdmin(admin.ModelAdmin):
