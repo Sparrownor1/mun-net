@@ -205,9 +205,18 @@ def edit_delegation(request):
 				#Save delegation details
 				form = DelegationForm(request.POST, instance=user_del)
 				if form.is_valid():
-					updated_delegation = form.save()
-					messages.info(request, "Delegation information saved")
-					return redirect("delegation:index")
+					#check for amount of delegates in delegation against inputted size
+					delegates_in_delegation = Delegate.objects.filter(delegation=user_del)
+					delegation_size = form.cleaned_data['size']
+					if len(delegates_in_delegation) <= delegation_size:
+						#If there are less or as many delegates than specified, save data
+						updated_delegation = form.save()
+						messages.info(request, "Delegation information saved")
+						return redirect("delegation:index")
+					else:
+						#Else throw error
+						messages.error(request, "You have more delegates than your delegation size states, please change it")
+						return redirect('delegation:edit_delegation')
 			#Show delegation details
 			else:
 				form = DelegationForm(instance=user_del)
