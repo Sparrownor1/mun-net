@@ -5,5 +5,9 @@ from django_tenants.admin import TenantAdminMixin
 class ConferenceAdmin(TenantAdminMixin, admin.ModelAdmin):
         list_display = ('name',)
 
+        fieldsets = (
+            (None, {'fields': ('name',)}),
+        )
+
 admin.site.register(Conference, ConferenceAdmin)
-admin.site.register(Domain)
+# admin.site.register(Domain)
