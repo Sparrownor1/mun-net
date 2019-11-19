@@ -2,7 +2,6 @@ from django.db import models
 from django.utils import timezone
 from delegation.models import Committee
 from users.models import User
-
 from tinymce import HTMLField
 
 # Create your models here.

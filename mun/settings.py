@@ -25,28 +25,44 @@ SECRET_KEY = '8x&7*e=9cdmp#@-#(=_5w9h6i&n8ii4=088^s(t)*+c^s056mg'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['dcmun.localhost', 'localhost']
 
 AUTH_USER_MODEL = 'users.User'
 
 # Application definition
+SHARED_APPS = (
+    'django_tenants',  # mandatory
+    'tenants', # you must list the app where your tenant model resides in
 
-INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
     'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-
     'tinymce',
     'django_extensions',
 
+    # everything below here is optional
+    'django.contrib.auth',
+    'django.contrib.sessions',
+    'django.contrib.sites',
+    'django.contrib.messages',
+    'django.contrib.admin',
+    'django.contrib.staticfiles',
+)
+
+TENANT_APPS = (
+    # The following Django contrib apps must be in TENANT_APPS
+    'django.contrib.contenttypes',
+
+    # your tenant-specific apps
     'users.apps.UsersConfig',
     'delegation.apps.DelegationConfig',
     'secretariat.apps.SecretariatConfig',
     'chair.apps.ChairConfig',
-]
+)
+
+INSTALLED_APPS = list(SHARED_APPS) + [app for app in TENANT_APPS if app not in SHARED_APPS]
+
+TENANT_MODEL = "tenants.Conference" # app.Model
+
+TENANT_DOMAIN_MODEL = "tenants.Domain"
 
 TINYMCE_DEFAULT_CONFIG = {
     'height': 360,
@@ -78,6 +94,7 @@ TINYMCE_DEFAULT_CONFIG = {
 }
 
 MIDDLEWARE = [
+    'django_tenants.middleware.main.TenantMainMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -96,6 +113,7 @@ TEMPLATES = [
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
+                'django.template.context_processors.request',
                 'django.template.context_processors.debug',
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
@@ -115,11 +133,18 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+        'ENGINE': 'django_tenants.postgresql_backend',
+        'NAME': 'mun-net',
+        'USER': 'postgres',
+        'PASSWORD': 'admin',
+        'HOST': '127.0.0.1',
+        'PORT': '5432',
     }
 }
 
+DATABASE_ROUTERS = (
+    'django_tenants.routers.TenantSyncRouter',
+)
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators
