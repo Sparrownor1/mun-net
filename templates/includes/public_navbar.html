@@ -1,0 +1,17 @@
+<nav>
+  <div class="nav-wrapper indigo darken-4">
+
+    <a href="/" class="brand-logo center hide-on-med-and-down">MUN-Net!</a>
+
+    <ul id="nav-mobile" class="right hide-on-down">
+
+      {% if user.is_authenticated %}
+
+        {% if user.is_superuser %}
+          <li><a href="/admin">Admin</a></li>
+        {% endif %}
+
+      {% endif %}
+    </ul>
+  </div>
+</nav>
