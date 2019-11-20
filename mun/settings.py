@@ -20,12 +20,11 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '8x&7*e=9cdmp#@-#(=_5w9h6i&n8ii4=088^s(t)*+c^s056mg'
+from decouple import config, Csv
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
-
-ALLOWED_HOSTS = ['.localhost', 'localhost']
+SECRET_KEY = config('SECRET_KEY')
+DEBUG = config('DEBUG', defaulf=False, cast=bool)
+ALLOWED_HOSTS = config('ALLOWED_HOSTS', cast=Csv())
 
 AUTH_USER_MODEL = 'users.User'
 
