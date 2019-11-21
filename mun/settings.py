@@ -44,6 +44,7 @@ SHARED_APPS = (
     'django.contrib.messages',
     'django.contrib.admin',
     'django.contrib.staticfiles',
+    'users.apps.UsersConfig',
 )
 
 TENANT_APPS = (
@@ -51,7 +52,6 @@ TENANT_APPS = (
     'django.contrib.contenttypes',
 
     # your tenant-specific apps
-    'users.apps.UsersConfig',
     'delegation.apps.DelegationConfig',
     'secretariat.apps.SecretariatConfig',
     'chair.apps.ChairConfig',
