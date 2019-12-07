@@ -1,7 +1,13 @@
 <nav>
   <div class="nav-wrapper indigo darken-4">
 
-    <a href="/" class="brand-logo hide-on-med-and-down">MUN-Net!</a>
+    <a href="/" class="brand-logo hide-on-med-and-down">
+      {% if tenant %}
+      {{tenant}}
+      {% else %}
+      MUN-Net!
+      {% endif %}
+    </a>
 
     <ul id="nav-mobile" class="right hide-on-down">
 

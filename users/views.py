@@ -8,11 +8,13 @@ from .forms import DelegationSignUpForm, NewUserChangeForm
 def home(request):
 
     TITLE = "MUN-Net"
+    TENANT = request.tenant
 
     return render(
         request,
         "users/index.html",
-        {"title":TITLE}
+        {"title":TITLE,
+         "tenant": request.tenant}
     )
 
 def register(request):
@@ -37,13 +39,15 @@ def register(request):
             return render(request=request,
                           template_name="users/register.html",
                           context={"form": form,
-                                   "title": TITLE})
+                                   "title": TITLE,
+                                   "tenant": request.tenant})
 
     form = DelegationSignUpForm
     return render(request,
                   "users/register.html",
                   {"form": form,
-                   "title": TITLE}
+                   "title": TITLE,
+                   "tenant": request.tenant}
                   )
 
 
@@ -68,7 +72,8 @@ def login_request(request):
     form = AuthenticationForm
     return render(request=request,
                   template_name="users/login.html",
-                  context={"form": form}
+                  context={"form": form,
+                           "tenant": request.tenant}
                   )
 
 
@@ -94,7 +99,8 @@ def account(request):
         return render(request,
                       "users/account.html",
                       {"title": TITLE,
-                      "form": form})
+                      "form": form,
+                      "tenant": request.tenant})
 
 
 def index(request):

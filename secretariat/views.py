@@ -26,6 +26,7 @@ def index(request):
             return render(request,
                           "secretariat/index.html",
                           {"title": TITLE,
+                          "tenant": request.tenant,
                           "pages": pages})
 
     messages.error(request, "You are not authorized to access that page")
@@ -55,6 +56,7 @@ def allocations(request):
                           "secretariat/allocations.html",
                           {
                               "title": TITLE,
+                              "tenant": request.tenant,
                               'delegate_filter': delegate_filter,
                               'allocation_filter': allocation_filter,
                               'no_committee_selected': no_committee_selected,
@@ -135,12 +137,14 @@ def add_chair(request):
                     return render(request=request,
                                   template_name="secretariat/add_chair.html",
                                   context={"title": TITLE,
+                                           "tenant": request.tenant,
                                            "form": form})
 
             form = ChairCreationForm
             return render(request,
                           "secretariat/add_chair.html",
                           {"title": TITLE,
+                          "tenant": request.tenant,
                            "form": form}
                           )
 
@@ -167,6 +171,7 @@ def progress(request):
             return render(request,
                           "secretariat/progress.html",
                           {"title": TITLE,
+                          "tenant": request.tenant,
                            "sheets": sheets})
 
     messages.error(request, "You are not authorized to access that page")
@@ -190,6 +195,7 @@ def progress_sheet(request, slug):
             return render(request,
                           "secretariat/progress_sheet.html",
                           {"title": TITLE,
+                          "tenant": request.tenant,
                            "sheet": sheet,
                            "other_sheets": other_sheets})
 
@@ -209,6 +215,7 @@ def requests(request):
             return render(request,
                           "secretariat/requests.html",
                           {"title": TITLE,
+                          "tenant": request.tenant,
                            'requests': request_list,
                            'filter': request_filter})
 

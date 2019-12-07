@@ -25,6 +25,7 @@ def index(request):
             return render(request,
                           "chair/index.html",
                           {"title": TITLE,
+                          "tenant": request.tenant,
                            "pages": pages})
 
     messages.error(request, "You are not authorized to access that page")
@@ -62,6 +63,7 @@ def sheet(request):
                 return render(request,
                               "chair/sheet.html",
                               {"title": TITLE,
+                              "tenant": request.tenant,
                                "form": form,
                                "own_committee": own_committee})
 
@@ -84,6 +86,7 @@ def requests(request):
             return render(request,
                           "chair/requests.html",
                           {"title": TITLE,
+                          "tenant": request.tenant,
                            "past_requests": past_requests,
                            "own_committee": own_committee})
 
@@ -113,6 +116,7 @@ def add_request(request):
                 return render(request,
                               "chair/add_request.html",
                               {"title": TITLE,
+                              "tenant": request.tenant,
                                "form": form}
                               )
 
@@ -141,6 +145,7 @@ def edit_request(request, request_key):
                 return render(request,
                               "chair/edit_request.html",
                               {"title": TITLE,
+                              "tenant": request.tenant,
                                "form": form})
 
     messages.error(request, "You are not authorized to access that page")
@@ -177,6 +182,7 @@ def position_papers(request):
                 request,
                 'chair/position_papers.html',
                 {"title": TITLE,
+                "tenant": request.tenant,
                  'papers': papers,
                  'own_committee': own_committee}
             )
