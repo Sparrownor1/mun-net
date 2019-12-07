@@ -1,7 +1,9 @@
 {% extends 'header.html' %}
 
 {% block content %}
-
+  <p>
+    Please ask your Head Delegate or Faculty Advisor to create an account for your delegation or school using this page, or sign up as an individual delegate
+  </p>
   <form method="POST">
       {% csrf_token %}
       {{form.as_p}}
