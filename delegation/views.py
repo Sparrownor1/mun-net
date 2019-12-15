@@ -18,6 +18,7 @@ def index(request):
 			#Get delegates from users delegation
 			user_del = Delegation.objects.get(user=current_user)
 			delegates_in_delegation = Delegate.objects.filter(delegation=user_del)
+			no_delegates = len(delegates_in_delegation) == 0
 			#Get allocations from delegates
 			allocations = Allocation.objects.filter(delegate__delegation=user_del)
 
@@ -30,6 +31,7 @@ def index(request):
 						  "delegation/index.html",
 						  {"title": TITLE,
 						   "delegates": delegates_in_delegation,
+						   "no_delegates": no_delegates,
 						   "allocations": allocations}
 						   )
 
