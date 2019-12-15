@@ -30,6 +30,7 @@ def index(request):
 			return render(request,
 						  "delegation/index.html",
 						  {"title": TITLE,
+						  "tenant": request.tenant,
 						   "delegates": delegates_in_delegation,
 						   "no_delegates": no_delegates,
 						   "allocations": allocations}
@@ -64,6 +65,7 @@ def add_delegate(request):
 					return render(request,
 								  "delegation/add_delegate.html",
 								  {"title": TITLE,
+								  "tenant": request.tenant,
 								   "form": form}
 					)
 			else:
@@ -103,6 +105,7 @@ def edit_delegate(request, delegate_key):
 				return render(request,
 							  "delegation/edit_delegate.html",
 							  {"title": TITLE,
+							  "tenant": request.tenant,
 							   "form": form})
 
 	messages.error(request, "You are not authorized to access that page")
@@ -130,6 +133,8 @@ def delete_delegate(request, delegate_key):
 def upload_position_paper(request, delegate_key):
 	if request.user.is_authenticated:
 		if request.user.is_delegation:
+
+			TITLE = "Upload Position Paper"
 
 			delegate = Delegate.objects.get(pk=delegate_key)
 			#Check if delegate is in delegation
@@ -184,7 +189,9 @@ def upload_position_paper(request, delegate_key):
 
 				return render(request,
 							  "delegation/upload_position_paper.html",
-							  {'form': form,
+							  {"tenant": request.tenant,
+						  	   'title': TITLE,
+							   'form': form,
 							   'delegate': delegate,
 							   'current_paper': current_paper,
 							   })
@@ -197,6 +204,8 @@ def upload_position_paper(request, delegate_key):
 	return redirect('users:index')
 
 def edit_delegation(request):
+
+	TITLE = "Edit Delegation"
 
 	current_user = request.user
 	if current_user.is_authenticated:
@@ -224,7 +233,9 @@ def edit_delegation(request):
 				form = DelegationForm(instance=user_del)
 				return render(request,
 							  "delegation/edit_delegation.html",
-							  {"form": form})
+							  {"tenant": request.tenant,
+							  'title': TITLE,
+							   "form": form})
 
 	messages.error(request, "You are not authorized to access that page")
 	return redirect('users:index')
